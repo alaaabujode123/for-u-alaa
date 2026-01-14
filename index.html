@@ -1,0 +1,167 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<title>Interactive Cats</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+<style>
+body {
+  margin: 0;
+  height: 100vh;
+  font-family: Arial, sans-serif;
+  display: flex;
+  justify-content: center;
+  align-items: center;
+  text-align: center;
+  overflow: hidden;
+  position: relative;
+  background: linear-gradient(135deg, #ffdde1, #ee9ca7);
+}
+
+.page {
+  display: none;
+  max-width: 500px;
+  padding: 30px;
+  border-radius: 20px;
+  background: rgba(255,255,255,0.85);
+  box-shadow: 0 10px 30px rgba(0,0,0,0.2);
+  transition: transform 0.5s ease, opacity 0.5s ease;
+}
+
+.page.active {
+  display: block;
+  transform: scale(1);
+  opacity: 1;
+}
+
+button {
+  position: relative;
+  margin: 10px;
+  padding: 10px 20px;
+  font-size: 14px;
+  border: none;
+  border-radius: 25px;
+  background: #333;
+  color: white;
+  cursor: pointer;
+  transition: all 0.3s ease;
+}
+
+button:hover {
+  background: #555;
+  transform: scale(1.05);
+}
+
+.fun-msg {
+  position: absolute;
+  font-size: 14px;
+  color: #ff0000;
+  font-weight: bold;
+  pointer-events: none;
+}
+
+#waitPage p {
+  font-size: 22px;
+  color: #333;
+  animation: pulse 1.2s infinite alternate;
+}
+
+@keyframes pulse {
+  0% { transform: scale(1); opacity: 0.7; }
+  100% { transform: scale(1.1); opacity: 1; }
+}
+
+/* Background cats */
+.cat {
+  position: absolute;
+  font-size: 20px;
+  color: rgba(0,0,0,0.1);
+  pointer-events: none;
+  user-select: none;
+  font-weight: bold;
+  animation: float 20s linear infinite;
+}
+
+@keyframes float {
+  0% { transform: translateY(100vh); }
+  100% { transform: translateY(-100vh); }
+}
+</style>
+</head>
+
+<body>
+
+<div class="page active" id="page0">
+  <button onclick="nextPageWithWait(1)">Button 1</button>
+  <button id="noBtn">Button 2</button>
+</div>
+
+<div class="page" id="page99">
+  <button onclick="nextPageWithWait(1)">Continue</button>
+</div>
+
+<div class="page" id="page1">
+  <button onclick="nextPageWithWait(2)">Next</button>
+</div>
+
+<div class="page" id="page2">
+  <button onclick="nextPageWithWait(3)">Next</button>
+</div>
+
+<div class="page" id="page3">
+  <button>Done</button>
+</div>
+
+<div class="page" id="waitPage">
+  <p></p>
+</div>
+
+<div id="funMsg" class="fun-msg"></div>
+
+<script>
+const noBtn = document.getElementById('noBtn');
+const funMsg = document.getElementById('funMsg');
+
+const messages = ["😅","😜","😂","😉","😎","🙃"];
+
+if(noBtn){
+  noBtn.addEventListener('mouseover', () => {
+    const x = Math.random() * (window.innerWidth - noBtn.offsetWidth);
+    const y = Math.random() * (window.innerHeight - noBtn.offsetHeight);
+    noBtn.style.position = 'absolute';
+    noBtn.style.left = x + 'px';
+    noBtn.style.top = y + 'px';
+
+    const msg = messages[Math.floor(Math.random() * messages.length)];
+    funMsg.textContent = msg;
+    funMsg.style.left = (x + 50) + 'px';
+    funMsg.style.top = (y - 30) + 'px';
+  });
+}
+
+function nextPageWithWait(nextNum){
+  document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+  document.getElementById('waitPage').classList.add('active');
+
+  setTimeout(() => {
+    document.querySelectorAll('.page').forEach(p => p.classList.remove('active'));
+    document.getElementById('page' + nextNum).classList.add('active');
+  }, 4500);
+}
+
+// Create floating cat names in background
+const catNames = ["hema","shera","za3tora"];
+for(let i=0;i<15;i++){
+  const cat = document.createElement('div');
+  cat.classList.add('cat');
+  cat.textContent = catNames[Math.floor(Math.random()*catNames.length)];
+  cat.style.left = Math.random() * 100 + "vw";
+  cat.style.animationDuration = (15 + Math.random()*15) + "s";
+  cat.style.fontSize = (10 + Math.random()*20) + "px";
+  document.body.appendChild(cat);
+}
+</script>
+
+</body>
+</html>
